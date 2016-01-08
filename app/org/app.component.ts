@@ -1,6 +1,7 @@
-import {Component} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 import {Persona} from './persona';
 import {PersonaDetailComponent} from './persona-detail.component'
+import {PersonaService} from './persona.service';
 
 @Component({
     selector: 'my-app',
@@ -66,31 +67,28 @@ import {PersonaDetailComponent} from './persona-detail.component'
 			    border-radius: 4px 0px 0px 4px;
 			  }
 			`],
-	directives: [PersonaDetailComponent];
+	directives: [PersonaDetailComponent],
+	providers: [PersonaService];
 
 })
 
-export class AppComponent { 
+export class AppComponent implements OnInit{ 
 	public titulo = 'Personas';
-	public personas = PERSONAS;
+	public personas: Persona[];
 
 	public personaSeleccionada: Persona;
+
+	constructor(private _personaService: PersonaService) {}
+
+	ngOnInit() {
+		this.getPersonas();
+	}
 
 	onSelect(persona: Persona) {
 		this.personaSeleccionada = persona;
 	}
+
+	getPersonas() {
+		this._personaService.getPersonas().then(personas => this.personas = personas);
+	}
 }
-
-
-
-var PERSONAS: Persona[] = [
-	{ "id": 1, "nombres": "Pablo", "apellidos":"Islas"},
-	{ "id": 2, "nombres": "Rebe", "apellidos": "Arteta" },
-	{ "id": 3, "nombres": "Guido", "apellidos": "Ace" },
-	{ "id": 4, "nombres": "Jorge", "apellidos": "Casariego" },
-	{ "id": 5, "nombres": "Omar", "apellidos": "Esgaib" },
-	{ "id": 6, "nombres": "Mauricio", "apellidos": "Merin" },
-	{ "id": 7, "nombres": "Iris", "apellidos": "Galeano" },
-	{ "id": 8, "nombres": "Diosnel", "apellidos": "Velazquez" }
-];
-
